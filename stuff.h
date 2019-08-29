@@ -8,17 +8,7 @@ int q;
 char *filename;
 int samples, steps_between_samples;
 
-/* LINKED LIST STUFF */
-typedef struct list_node {
-	unsigned char spin;
-	int label;
-	struct list_node *next;
-} list_node;
-
-list_node* create_node(int label);
-int search_list(list_node* head, int label);
-void free_list();
-
+unsigned char *rand_spins;
 /* LATTICE STUFF */
 typedef struct point {
 	unsigned char spin;

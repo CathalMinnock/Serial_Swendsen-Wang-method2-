@@ -82,42 +82,17 @@ void sw_iterate() {
 			}
 		}
 	}
-	/* STEP 3: MAKE A LINKED LIST OF THE CLUSTER LABELS AND CORRESPONDING NEW SPIN, AND FLIP THE SPINS USING THIS */
-	// make a linked list of all the resulting cluster labels
-	// each node contains a cluster label, and the spin that cluster should flip to
-	list_node *head = malloc(sizeof(list_node));
-	head->label = lattice[0][0][0].label;
-	head->spin = rand() % q;
-	head->next = NULL;
-	list_node *node;
-	bool found;
-	for(i = 0; i < x_size; ++i) 
-	for(j = 0; j < y_size; ++j) 
-	for(k = 0; k < z_size; ++k) {
-		found = false;
-		node = head;
-		while(node != NULL) {
-			if(node->label == lattice[i][j][k].label) {
-				found = true;
-				break;
-			}
-			else
-				node = node->next;
-		}
-		if(!found) {
-			node = malloc(sizeof(list_node));
-			node->label = lattice[i][j][k].label;
-			node->spin = rand() % q;
-			node->next = head;
-			head = node;
-		}
-	}
+	/*
+	 * STEP 3: Make an array the size of the lattice. For each initial label, generate a random spin. 
+	 * Flip each spin to the random spin at the point of this array corresponding to its cluster label.
+	 */
+	for(i = 0; i < x_size * y_size * z_size; ++i)
+		rand_spins[i] = rand() % q;
 	// flip every spin to a random value from 0...q-1, based on its cluster label
 	for(i = 0; i < x_size; ++i) 
 	for(j = 0; j < y_size; ++j) 
 	for(k = 0; k < z_size; ++k)
-		lattice[i][j][k].spin = search_list(head, lattice[i][j][k].label);
-	free_list(head);
+		lattice[i][j][k].spin = rand_spins[ lattice[i][j][k].label ];
 }
 
 
@@ -171,10 +146,10 @@ void print_lattice(point ***lattice) {
 		for(j = 0; j < y_size; ++j) { 
 			for(k = 0; k < z_size; ++k) { 
 				printf("%i ", lattice[i][j][k].spin);
-			} // z direction
+			}
 			printf("\n");
-		} // columns
-	} // rows 
+		}
+	}
 }
 
 void print_lattice_labels(point ***lattice) {
@@ -184,10 +159,10 @@ void print_lattice_labels(point ***lattice) {
 		for(j = 0; j < y_size; ++j) { 
 			for(k = 0; k < z_size; ++k) { 
 				printf("%i ", lattice[i][j][k].label);
-			} // z direction
+			} 
 			printf("\n");
-		} // columns
-	} // rows 
+		} 
+	} 
 }
 
 void randomize_lattice() {
@@ -219,34 +194,5 @@ void free_lattice() {
 	int i;
 	for(i=0; i < x_size; ++i)
 		free(&lattice[i][-1]); // free the arrays of pointers to the columns;
-	
 	free(&lattice[-1]); // free the array of pointers to the rows
-}
-
-list_node* create_node(int label) {
-	list_node* tmp;
-	tmp = malloc(sizeof(list_node));
-	tmp->spin = rand() % q;
-	tmp->label = label;
-	tmp->next = NULL;
-	return tmp;
-}
-
-int search_list(list_node* head, int label) {
-	list_node *tmp = head;
-	while(tmp != NULL) {
-		if(tmp->label == label)
-			return tmp->spin;
-		tmp = tmp->next;
-	}
-	return -2; // error: label not found in list
-}
-
-void free_list(list_node *head) {
-	list_node *tmp;
-	while(head != NULL) {
-		tmp = head;
-		head = head->next;
-		free(tmp);
-	}
 }

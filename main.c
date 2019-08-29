@@ -39,6 +39,7 @@ void init(int argc, char** argv) {
 				exit(1);
 		}
 	}
+	rand_spins = malloc(x_size * y_size * z_size * sizeof(unsigned char));
 	x_values = malloc(q * sizeof(double));
 	y_values = malloc(q * sizeof(double));
 	int i;
@@ -65,5 +66,6 @@ int main(int argc, char** argv)
 	}
 	fclose(fp);
 	free_lattice();
+	free(rand_spins);
 	return 0;
 }
