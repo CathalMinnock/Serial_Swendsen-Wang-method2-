@@ -2,12 +2,12 @@
 #SBATCH -n 1
 #SBATCH -t 6:00:00
 #SBATCH -p compute
-#SBATCH -J q3s16serial
+#SBATCH -J q3s8serial
 
 samples=10000
 skip_steps=1
 q=3
-size=16
+size=8
 temps=40
 beta_start=0
 beta_end=1

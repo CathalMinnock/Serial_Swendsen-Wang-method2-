@@ -39,6 +39,7 @@ void init(int argc, char** argv) {
 				exit(1);
 		}
 	}
+	prob = 1 - exp(-2 * beta);
 	rand_spins = malloc(x_size * y_size * z_size * sizeof(unsigned char));
 	x_values = malloc(q * sizeof(double));
 	y_values = malloc(q * sizeof(double));
@@ -52,12 +53,11 @@ void init(int argc, char** argv) {
 int main(int argc, char** argv)
 {	
 	init(argc, argv);
-	
 	int i, j;
 	init_lattice();
 	randomize_lattice();
-	for(i = 0; i < 10 * steps_between_samples; ++i)
-		sw_iterate(prob);
+	for(i = 0; i < 100; ++i)
+		sw_iterate();
 	for(i = 0; i < samples; ++i) {
 		for(j = 0; j < steps_between_samples; ++j)
 			sw_iterate();
